@@ -1,73 +1,74 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 int N,M;
-int wall[51][51];  //입력받는 기본배열 
-bool visited[51][51];  //방문여부 (visit으로 만드니까 ambiguous뜸 visited로 만들자) 
-int moveY[4]={0,-1,0,1};  //서북동남 순으로 해야 비트연산 가능 
+int wall[51][51];
+bool visited[51][51];
+int moveY[4]={0,-1,0,1};  //서북동남 
 int moveX[4]={-1,0,1,0}; 
-int result1, result2, result3;
 
-
-int bfs(int y,int x){  //y,x에서 시작한 도형 넓이 반환 
-	queue<pair<int, int> > pQ;  // {y,x} pair 큐 
+int bfs(int y, int x){
+	int cnt=0;
+	queue<pair<int, int> > pQ;
 	pQ.push({y,x});
-	visited[y][x]=1;
-	int imsi=1;  //넓이 출력하려고  
+	
 	while(!pQ.empty()){
-		int nextY=pQ.front().first;
-		int nextX=pQ.front().second;
+		pair<int, int> imsi=pQ.front();
 		pQ.pop();
+		cnt++;
+		int nowY=imsi.first;  int nowX=imsi.second;
+		visited[y][x]=1;
 		for(int i=0;i<4;i++){
-			int imsiY=nextY+moveY[i];
-			int imsiX=nextX+moveX[i];
-			if(imsiY>0&&imsiY<=M&&imsiX>0&&imsiX<=N){
-			
-				if(visited[imsiY][imsiX]==0&&( (wall[nextY][nextX]&(1<<i) ) )==0){ //이동할곳이 방문하지 않았고, 그 방향에 벽이 없으면 
-					imsi++;
-					pQ.push({imsiY,imsiX});
-					visited[imsiY][imsiX]=1;
+			int nextY=nowY+moveY[i];
+			int nextX=nowX+moveX[i];
+			if(nextX>=1&&nextX<=M&&nextY>=1&&nextY<=N){
+				if(visited[nextY][nextX]==false&&((wall[nowY][nowX]&(1<<i)))==0){
+					visited[nextY][nextX]=1;
+					pQ.push({nextY, nextX});
 				}
 			}
 		}
 	}
-	return imsi;
+	//cout<<"cnt : "<<cnt<<"\n";
+	return cnt;
 }
 
+
 int main(){
-	cin>>N>>M;
-	for(int i=1;i<=M;i++){
-		for(int j=1;j<=N;j++){
+	int result1=0;
+	int result2=0;
+	int result3=0;
+	cin>>M>>N;
+	for(int i=1;i<=N;i++){
+		for(int j=1;j<=M;j++){
 			int imsi; cin>>imsi;
 			wall[i][j]=imsi;
 		}
 	}
-	for(int i=1;i<=M;i++){
-		for(int j=1;j<=N;j++){
-			if(visited[i][j]==0){
+	fill(&visited[0][0], &visited[51][51], false);
+	for(int i=1;i<=N;i++){
+		for(int j=1;j<=M;j++){
+			if(visited[i][j]==false){
 				result1++;
 				int imsi=bfs(i,j);
 				if(imsi>result2) result2=imsi;
-			} 
+				
+			}
 		}
 	}
-	cout<<result1<<"\n"<<result2<<"\n";
-	
-	
-	//이제 result3구해야됨 
-	for(int i=1;i<=M;i++){
-		for(int j=1;j<=N;j++){
+	for(int i=1;i<=N;i++){
+		for(int j=1;j<=M;j++){
 			for(int k=1;k<=8;k<<=1){
-				if(wall[i][j]&k){  //i,j 에 벽이 있으면,  
-					wall[i][j]-=k;  //벽 허물고
-					fill(&visited[1][1], &visited[50][51], 0);  //visit 비워주고 
+				if(wall[i][j]&k){
+					wall[i][j]-=k;
+					fill(&visited[0][0], &visited[51][51], false);
 					int imsi=bfs(i,j);
-					if(imsi>result3) result3=imsi;
-					wall[i][j]+=k; //벽원복 
+					if(result3<imsi) result3=imsi;
+					wall[i][j]+=k;
 				}
 			}
 		}
-	} 
-	cout<<result3;
+	}
+	cout<<result1<<"\n"<<result2<<"\n"<<result3;
 	return 0;
-} 
+}
