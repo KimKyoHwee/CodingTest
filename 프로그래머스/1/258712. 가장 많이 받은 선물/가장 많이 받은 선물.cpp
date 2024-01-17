@@ -15,13 +15,7 @@ map<pair<string, string>, int> counts; // a가 b에게 준 선물의 수
 map<string, int> presents;  //최종적으로 받는 선물 수
 
 void addCounts(string s1, string s2){
-    if(counts.find({s1, s2})!=counts.end()){
-        counts[{s1, s2}]++;
-        return;
-    }
-    else{
-        counts.insert({{s1,s2},1});
-    }
+    counts[{s1,s2}]++;
 }
 
 int getCounts(string s1, string s2){
