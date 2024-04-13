@@ -23,8 +23,8 @@ class Solution {
         else return getHead(head[node]);
     }
     public static void union(int node1, int node2){
-        if(getHead(node1)<=getHead(node2)) head[getHead(node1)]=getHead(node2);
-        else head[getHead(node1)]=getHead(node2);
+        head[getHead(node1)]=getHead(node2);
+        
     }
     public int solution(int n, int[][] costs) {
         head=new int[n];
