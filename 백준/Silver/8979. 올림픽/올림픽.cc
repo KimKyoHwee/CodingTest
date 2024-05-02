@@ -35,7 +35,7 @@ int main() {
 		}
 	}
 	sort(cv.begin(), cv.end(), cmp);
-	for (int i = 0; i < K; i++) {
+	for (int i = 0; i < cv.size(); i++) {
 		Country ct = cv[i];
 		if (kgold == ct.gold && ksilver == ct.silver && kbronze == ct.bronze) {
 			cout << i+1<<"\n";
