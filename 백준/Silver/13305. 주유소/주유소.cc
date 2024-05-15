@@ -19,7 +19,7 @@ int main() {
 	int cheapNode, cheapPrice = price[1];
 	for (int i = 2; i <= N; i++) {
 		if (price[i - 1] < cheapPrice) cheapPrice = price[i - 1];  //다음 인덱스로 가기 전, 이전 인덱스까지 가장 저렴한 가격의 기름 저장
-		dp[i] = (unsigned long long)dp[i - 1] + (unsigned long long)(cheapPrice * edge[i - 1]);
+		dp[i] = (unsigned long long)dp[i - 1] + (unsigned long long)((unsigned long long)cheapPrice * edge[i - 1]);
 	}
 	cout << dp[N];
 	return 0;
