@@ -14,13 +14,14 @@ int alphaCount(int n){
 int main(){
     cin>>N;
     vector<int> input(N);
-    dp[1]=1; dp[2]=2; dp[3]=3; dp[4]=4;
+    //dp[1]=1; dp[2]=2; dp[3]=3; dp[4]=4;
+    dp[1]=1;
     int maxN=0;
     for(int i=0;i<N;i++){
         cin>>input[i];
         if(maxN<input[i]) maxN=input[i];
     }
-    for(int i=5;i<=maxN;i++){
+    for(int i=2;i<=maxN;i++){
         dp[i]=dp[i-1]+alphaCount(i);
         //cout<<i<<": "<<dp[i]<<"\n";
     }
