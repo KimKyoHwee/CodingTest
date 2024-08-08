@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <climits> // INT_MAX 사용을 위한 헤더 파일
+#define INT_MAX 987654321
 
 using namespace std;
 
@@ -14,6 +14,7 @@ vector<vector<Edge>> edges;
 
 vector<int> dijkstra(int start) {
     vector<int> dist(N + 1, INT_MAX);
+    vector<bool> visited(N+1, false);
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
     dist[start] = 0;
@@ -23,9 +24,8 @@ vector<int> dijkstra(int start) {
         int currentDist = pq.top().first;
         int currentNode = pq.top().second;
         pq.pop();
-
-        if (currentDist > dist[currentNode]) continue;
-
+        if(visited[currentNode]) continue;
+        visited[currentNode]=true;
         for (const Edge& edge : edges[currentNode]) {
             int nextNode = edge.to;
             int nextDist = currentDist + edge.weight;
@@ -56,7 +56,7 @@ int main() {
     vector<int> distFromA = dijkstra(mustA);
     vector<int> distFromB = dijkstra(mustB);
 
-    // 각각의 경로가 존재하지 않는 경우 INT_MAX로 설정되므로 이를 체크해야 합니다.
+    
     int path1 = distFrom1[mustA] != INT_MAX && distFromA[mustB] != INT_MAX && distFromB[N] != INT_MAX ? 
                 distFrom1[mustA] + distFromA[mustB] + distFromB[N] : INT_MAX;
  
