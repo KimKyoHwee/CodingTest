@@ -1,72 +1,67 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-int N, oCnt, xCnt;
-int oWinR, xWinR, oWinC, xWinC, xWin, oWin;
-vector<string> inputs, results;
-void setting(){
-    oWin=0;
-    xWin=0;
-    oWinR=0;
-    xWinR=0;
-    oWinC=0;
-    xWinC=0;
-    oCnt=0;
-    xCnt=0;
+
+bool judge(string s){
+    int xCnt=0, oCnt=0;
+    bool xWin=false, oWin=false;
+    for(int i=0;i<9;i++){
+        if(s[i]=='X') xCnt++;
+        else if(s[i]=='O') oCnt++;
+    }
+    for(int i=0;i<3;i++){ //행 조사
+        int xx=0, oo=0;
+        for(int j=0;j<3;j++){
+            if(s[i*3+j]=='X') xx++;
+            else if(s[i*3+j]=='O') oo++;
+        }
+        if(xx==3) xWin=true;
+        if(oo==3) oWin=true;
+    }
+    for(int i=0;i<3;i++){ //열 조사
+        int xx=0, oo=0;
+        for(int j=0;j<3;j++){
+            if(s[j*3+i]=='X') xx++;
+            else if(s[j*3+i]=='O') oo++;
+        }
+        if(xx==3) xWin=true;
+        if(oo==3) oWin=true;
+    }
+    int xx=0, oo=0;
+    for(int i=0;i<3;i++){  //동남방향 대각     
+        if(s[i*4]=='X') xx++;
+        else if(s[i*4]=='O') oo++;
+    }
+    if(xx==3) xWin=true;
+    if(oo==3) oWin=true;
+
+    xx=0, oo=0;
+    for(int i=1;i<=3;i++){  //서남방향 대각     
+        if(s[i*2]=='X') xx++;
+        else if(s[i*2]=='O') oo++;
+    }
+    if(xx==3) xWin=true;
+    if(oo==3) oWin=true;
+    if(!(xCnt==oCnt||xCnt-1==oCnt)) return false;
+    if(xCnt>5||oCnt>4) return false;
+    if(xWin){
+        if(oWin||!(xCnt-1==oCnt)) return false;
+    }
+    if(oWin&&!(xCnt==oCnt)) return false;
+    if(!(xWin||oWin)&&(xCnt+oCnt)<9) return false;
+    return true;
 }
+
 int main(){
-    string input;
+    vector<string> result;
     while(1){
-        cin>>input;
-        if(input=="end") break;
-        inputs.push_back(input);
-        N++;
+        string s; cin>>s;
+        if(s=="end") break;
+        if(judge(s)) result.push_back("valid");
+        else result.push_back("invalid");
     }
-    for(int i=0;i<N;i++){
-        setting();
-        string board=inputs[i];
-        for(int i=0;i<3;i++){
-            if(board[i]=='X'&&board[i+3]=='X'&&board[i+6]=='X') xWinC++;
-            if(board[i]=='O'&&board[i+3]=='O'&&board[i+6]=='O') oWinC++;
-            if(board[i*3]=='X'&&board[i*3+1]=='X'&&board[i*3+2]=='X') xWinR++;
-            if(board[i*3]=='O'&&board[i*3+1]=='O'&&board[i*3+2]=='O') oWinR++;
-        }
-        if(board[0]=='X'&&board[4]=='X'&&board[8]=='X') xWin++;
-        else if(board[2]=='X'&&board[4]=='X'&&board[6]=='X') xWin++;
-        if(board[0]=='O'&&board[4]=='O'&&board[8]=='O') oWin++;
-        else if(board[2]=='O'&&board[4]=='O'&&board[6]=='O') oWin++;
-    
-        for(int i=0;i<9;i++){
-            if(board[i]=='X') xCnt++;
-            else if(board[i]=='O') oCnt++;
-        }
-        if(oWin&&xWin) {
-            //cout<<1<<"\n";
-            results.push_back("invalid");
-            continue;
-        }
-        else if(oWin==1||oWinR==1||oWinC==1) {
-            if(xCnt==oCnt&&oCnt<5) {
-                //cout<<2<<"\n";
-                results.push_back("valid");
-                continue;
-            }
-        }
-        else if(xWin==1||xWinR==1||xWinC==1){
-            if(xCnt==(oCnt+1)) {
-                //cout<<3<<"\n";
-                results.push_back("valid");
-                continue;
-            }
-        }
-        else if(!xWin&&!oWin&&xCnt==5&&oCnt==4){
-            results.push_back("valid");
-            continue;
-        }
-        //cout<<4<<"\n";
-        //cout<<board<<" "<<xWin<<" "<<oWin<<" "<<xCnt<<" "<<oCnt<<"\n";
-        results.push_back("invalid");
-    }
-    for(int i=0;i<N;i++) cout<<results[i]<<"\n";
+    for(int i=0;i<result.size();i++) cout<<result[i]<<"\n";
+
+
     return 0;
 }
